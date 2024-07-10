@@ -17,8 +17,8 @@ def get_image_download_link(img, filename, text):
 
 # Fungsi dekripsi gambar
 def decryptPage():
-    st.markdown("<h4 style='text-align: left;'>Upload Stego Image</h4>", unsafe_allow_html=True)
-    stego_file = st.file_uploader('', type=['png', 'jpg', 'bmp', 'tiff'],key="decrypt")
+    st.markdown("<h4 style='text-align: left;'>Unggah Gambar Enkripsi</h4>", unsafe_allow_html=True)
+    stego_file = st.file_uploader('', type=['jpg'],key="decrypt")
     if stego_file is not None:
         stego = Image.open(stego_file)
 
@@ -44,7 +44,7 @@ def decryptPage():
 
 
         # Tampilkan gambar akhir
-        st.image(extracted_message, caption='This is your hidden message')
+        st.image(extracted_message, caption='Ini adalah gambar terenkripsi')
 
         # Tambahkan link download
-        st.markdown(get_image_download_link(extracted_message, 'result.jpg', 'Download extracted image'), unsafe_allow_html=True)
+        st.markdown(get_image_download_link(extracted_message, 'result.jpg', 'Download gambar sampul'), unsafe_allow_html=True)
