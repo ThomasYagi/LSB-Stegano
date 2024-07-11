@@ -15,6 +15,14 @@ def get_image_download_link(img, filename, text):
     href = f'<a href="data:image/jpeg;base64,{img_str}" download="{filename}">{text}</a>'  # Use 'image/jpeg' as the MIME type
     return href
 
+#Fungsi untuk menghitung bit gambar
+def calculate_image_bits(image_array):
+    dtype = image_array.dtype
+    bits_per_element = np.dtype(dtype).itemsize * 8
+    total_elements = image_array.size
+    total_bits = total_elements * bits_per_element
+    return total_bits
+
 # Fungsi dekripsi gambar
 def decryptPage():
     st.markdown("<h4 style='text-align: left;'>Unggah Gambar Enkripsi</h4>", unsafe_allow_html=True)
@@ -37,11 +45,9 @@ def decryptPage():
 
         extracted_message = Image.fromarray(extracted_message.astype('uint8'), 'RGB')
 
-        # enhancer = ImageEnhance.Contrast(extracted_message)
-        # extracted_message = enhancer.enhance(1.0)  # Increase contrast
-
-        # Ubah ke dalam bentuk gambar seperti semula
-
+        # Menampilkan jumlah bit dalam gambar pesan
+        total_bits = calculate_image_bits(extracted_message)
+        st.write(f"Jumlah bit dalam gambar {total_bits:,} bit")
 
         # Tampilkan gambar akhir
         st.image(extracted_message, caption='Ini adalah gambar terenkripsi')
