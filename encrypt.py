@@ -17,6 +17,14 @@ def get_image_download_link(img, filename, text):
 def resize_image(cover, message):
     return cover.resize(message.size)
 
+#Fungsi untuk menghitung bit gambar
+def calculate_image_bits(image_array):
+    dtype = image_array.dtype
+    bits_per_element = np.dtype(dtype).itemsize * 8
+    total_elements = image_array.size
+    total_bits = total_elements * bits_per_element
+    return total_bits
+
 # Fungsi enkripsi gambar
 def encryptPage():
     # Unggah gambar cover
@@ -52,6 +60,15 @@ def encryptPage():
 
             # Menggeser gambar pesan sebanyak (8 - imbed) bit ke kanan
             messageshift = np.right_shift(message, 8 - imbed)
+
+            # Menampilkan jumlah bit dalam gambar cover
+            total_bits = calculate_image_bits(cover)
+            st.write(f"Jumlah bit dalam gambar {total_bits:,} bit")
+            st.image(cover, caption='Ini adalah gambar wadah yang mengenkripsi')
+
+            # Menampilkan jumlah bit dalam gambar pesan
+            total_bits = calculate_image_bits(message)
+            st.write(f"Jumlah bit dalam gambar {total_bits:,} bit")
 
             # Tampilkan gambar pesan hanya dengan bit yang disematkan di layar
             # Harus digeser dari LSB (bit paling rendah) ke MSB (bit paling tinggi)
