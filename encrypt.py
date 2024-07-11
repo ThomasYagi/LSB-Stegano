@@ -17,6 +17,31 @@ def get_image_download_link(img, filename, text):
 def resize_image(cover, message):
     return cover.resize(message.size)
 
+# Fungsi untuk menghitung bit sebelum dikonversi ke Numpy Array
+def calculate_image_bits_pil(image):
+    # Get image size (width and height)
+    width, height = image.size
+    # Calculate the number of pixels
+    num_pixels = width * height
+    # Get the mode of the image to determine the number of channels
+    mode_to_bits = {
+        '1': 1,    # 1-bit pixels, black and white, stored with one pixel per byte
+        'L': 8,    # 8-bit pixels, black and white
+        'P': 8,    # 8-bit pixels, mapped to any other mode using a color palette
+        'RGB': 24, # 3x8-bit pixels, true color
+        'RGBA': 32,# 4x8-bit pixels, true color with transparency mask
+        'CMYK': 32,# 4x8-bit pixels, color separation
+        'YCbCr': 24,# 3x8-bit pixels, color video format
+        'LAB': 24, # 3x8-bit pixels, the L*a*b color space
+        'HSV': 24, # 3x8-bit pixels, Hue, Saturation, Value color space
+        'I': 32,   # 32-bit signed integer pixels
+        'F': 32    # 32-bit floating point pixels
+    }
+    bits_per_pixel = mode_to_bits.get(image.mode, 8) # Default to 8 bits if mode is not in the dictionary
+    # Calculate the total number of bits
+    total_bits = num_pixels * bits_per_pixel
+    return total_bits
+
 #Fungsi untuk menghitung bit gambar
 def calculate_image_bits(image_array):
     dtype = image_array.dtype
@@ -49,10 +74,10 @@ def encryptPage():
             # message = enhancer.enhance(0.1)
 
             # Menyamakan ukuran gambar cover dengan gambar pesan
-            cover = resize_image(cover, message)
+            cover_res = resize_image(cover, message)
 
             # Ubah ke array untuk manipulasi
-            cover_res = np.array(cover, dtype=np.uint8)
+            cover_res = np.array(cover_res, dtype=np.uint8)
             message = np.array(message, dtype=np.uint8)
 
             # "Imbed" adalah jumlah bit dari gambar pesan yang akan disematkan dalam gambar sampul
@@ -62,8 +87,8 @@ def encryptPage():
             messageshift = np.right_shift(message, 8 - imbed)
 
             # Menampilkan jumlah bit dalam gambar cover
-            total_bits = calculate_image_bits(cover)
-            st.write(f"Jumlah bit dalam gambar {total_bits:,} bit")
+            total_bits_before_conversion = calculate_image_bits_pil(cover)
+            st.write(f"Jumlah bit dalam gambar {total_bits_before_conversion:,} bit")
             st.image(cover, caption='Ini adalah gambar wadah yang mengenkripsi')
 
             # Menampilkan jumlah bit dalam gambar pesan
