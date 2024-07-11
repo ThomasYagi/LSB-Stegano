@@ -49,10 +49,10 @@ def encryptPage():
             # message = enhancer.enhance(0.1)
 
             # Menyamakan ukuran gambar cover dengan gambar pesan
-            # cover = resize_image(cover, message)
+            cover = resize_image(cover, message)
 
             # Ubah ke array untuk manipulasi
-            cover = np.array(cover, dtype=np.uint8)
+            cover_res = np.array(cover, dtype=np.uint8)
             message = np.array(message, dtype=np.uint8)
 
             # "Imbed" adalah jumlah bit dari gambar pesan yang akan disematkan dalam gambar sampul
@@ -79,7 +79,7 @@ def encryptPage():
 
             # Now, clear the imbed least significant bits of the cover image
             mask = 0xFF << imbed  # Create a mask with the least significant `imbed` bits as 0
-            coverzero = cover & mask
+            coverzero = cover_res & mask
 
             stego = coverzero | messageshift
 
