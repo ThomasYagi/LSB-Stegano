@@ -1,7 +1,7 @@
 import streamlit as st 
-from PIL import Image
+from PIL import Image #import gambar
 from PIL import ImageEnhance
-import numpy as np
+import numpy as np 
 import base64
 from io import BytesIO
 
@@ -27,7 +27,7 @@ def encryptPage():
 
         # Unggah gambar pesan
         st.markdown("<h4 style='text-align: left;'>Unggah Sampul Buku</h4>", unsafe_allow_html=True)
-        message_file = st.file_uploader('', type=['jpg'], key="message")
+        message_file = st.file_uploader('', type=['png','jpg'], key="message")
         if message_file is not None:
             message = Image.open(message_file)
 

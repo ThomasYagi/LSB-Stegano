@@ -18,7 +18,7 @@ def get_image_download_link(img, filename, text):
 # Fungsi dekripsi gambar
 def decryptPage():
     st.markdown("<h4 style='text-align: left;'>Unggah Gambar Enkripsi</h4>", unsafe_allow_html=True)
-    stego_file = st.file_uploader('', type=['jpg'],key="decrypt")
+    stego_file = st.file_uploader('', type=['png','jpg'],key="decrypt")
     if stego_file is not None:
         stego = Image.open(stego_file)
 
