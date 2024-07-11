@@ -70,12 +70,12 @@ def decryptPage():
         extracted_message_img = Image.fromarray(extracted_message.astype('uint8'), 'RGB')
 
         # Menampilkan jumlah bit dalam gambar cover
-        total_bits_before_conversion = calculate_image_bits_pil(stego)
-        st.write(f"Jumlah bit dalam gambar sebelum konversi {total_bits_before_conversion:,} bit")
+        total_bits_stego_before = calculate_image_bits_pil(stego)
+        st.write(f"Jumlah bit dalam gambar stego sebelum konversi: {total_bits_stego_before:,} bit")
 
         # Menampilkan jumlah bit dalam gambar pesan
-        total_bits = calculate_image_bits(extracted_message)
-        st.write(f"Jumlah bit dalam gambar setelah konversi {total_bits:,} bit")
+        total_bits_extracted_after = calculate_image_bits(extracted_message)
+        st.write(f"Jumlah bit dalam gambar yang diekstrak setelah konversi: {total_bits_extracted_after:,} bit")
 
         # Tampilkan gambar akhir
         st.image(extracted_message_img, caption='Ini adalah gambar terenkripsi')
