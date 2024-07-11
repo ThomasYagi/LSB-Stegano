@@ -15,7 +15,32 @@ def get_image_download_link(img, filename, text):
     href = f'<a href="data:image/jpeg;base64,{img_str}" download="{filename}">{text}</a>'  # Use 'image/jpeg' as the MIME type
     return href
 
-#Fungsi untuk menghitung bit gambar
+# Fungsi untuk menghitung bit sebelum dikonversi ke Numpy Array
+def calculate_image_bits_pil(image):
+    # Get image size (width and height)
+    width, height = image.size
+    # Calculate the number of pixels
+    num_pixels = width * height
+    # Get the mode of the image to determine the number of channels
+    mode_to_bits = {
+        '1': 1,    # 1-bit pixels, black and white, stored with one pixel per byte
+        'L': 8,    # 8-bit pixels, black and white
+        'P': 8,    # 8-bit pixels, mapped to any other mode using a color palette
+        'RGB': 24, # 3x8-bit pixels, true color
+        'RGBA': 32,# 4x8-bit pixels, true color with transparency mask
+        'CMYK': 32,# 4x8-bit pixels, color separation
+        'YCbCr': 24,# 3x8-bit pixels, color video format
+        'LAB': 24, # 3x8-bit pixels, the L*a*b color space
+        'HSV': 24, # 3x8-bit pixels, Hue, Saturation, Value color space
+        'I': 32,   # 32-bit signed integer pixels
+        'F': 32    # 32-bit floating point pixels
+    }
+    bits_per_pixel = mode_to_bits.get(image.mode, 8) # Default to 8 bits if mode is not in the dictionary
+    # Calculate the total number of bits
+    total_bits = num_pixels * bits_per_pixel
+    return total_bits
+
+# Fungsi untuk menghitung bit gambar
 def calculate_image_bits(image_array):
     dtype = image_array.dtype
     bits_per_element = np.dtype(dtype).itemsize * 8
@@ -45,9 +70,13 @@ def decryptPage():
 
         extracted_message_img = Image.fromarray(extracted_message.astype('uint8'), 'RGB')
 
+        # Menampilkan jumlah bit dalam gambar cover
+        total_bits_before_conversion = calculate_image_bits_pil(stego)
+        st.write(f"Jumlah bit dalam gambar sebelum konversi {total_bits_before_conversion:,} bit")
+
         # Menampilkan jumlah bit dalam gambar pesan
         total_bits = calculate_image_bits(extracted_message)
-        st.write(f"Jumlah bit dalam gambar {total_bits:,} bit")
+        st.write(f"Jumlah bit dalam gambar setelah konversi {total_bits:,} bit")
 
         # Tampilkan gambar akhir
         st.image(extracted_message_img, caption='Ini adalah gambar terenkripsi')

@@ -107,7 +107,7 @@ def encryptPage():
             coverzero = cover_res & mask
 
             total_bits_after_imbed = calculate_image_bits(coverzero)
-            st.write(f"Jumlah bit dalam gambar {total_bits_after_imbed:,} bit")
+            st.write(f"Jumlah bit dalam gambar enkripsi {total_bits_after_imbed:,} bit")
 
             stego = coverzero | messageshift
 
