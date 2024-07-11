@@ -37,8 +37,8 @@ def calculate_image_bits_pil(image):
     }
     bits_per_pixel = mode_to_bits.get(image.mode, 8) # Default to 8 bits if mode is not in the dictionary
     # Calculate the total number of bits
-    total_bits = num_pixels * bits_per_pixel
-    return total_bits
+    total_bits_before_conversion = num_pixels * bits_per_pixel
+    return total_bits_before_conversion
 
 # Fungsi untuk menghitung bit gambar
 def calculate_image_bits(image_array):
