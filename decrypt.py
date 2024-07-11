@@ -43,14 +43,14 @@ def decryptPage():
         for i in range(imbed):
             extracted_message = extracted_message | ((stego & (1 << i)) << (8 - imbed))
 
-        extracted_message = Image.fromarray(extracted_message.astype('uint8'), 'RGB')
+        extracted_message_img = Image.fromarray(extracted_message.astype('uint8'), 'RGB')
 
         # Menampilkan jumlah bit dalam gambar pesan
         total_bits = calculate_image_bits(extracted_message)
         st.write(f"Jumlah bit dalam gambar {total_bits:,} bit")
 
         # Tampilkan gambar akhir
-        st.image(extracted_message, caption='Ini adalah gambar terenkripsi')
+        st.image(extracted_message_img, caption='Ini adalah gambar terenkripsi')
 
         # Tambahkan link download
-        st.markdown(get_image_download_link(extracted_message, 'result.jpg', 'Download gambar sampul'), unsafe_allow_html=True)
+        st.markdown(get_image_download_link(extracted_message_img, 'result.jpg', 'Download gambar sampul'), unsafe_allow_html=True)
