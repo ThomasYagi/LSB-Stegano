@@ -17,28 +17,27 @@ def get_image_download_link(img, filename, text):
 
 # Fungsi untuk menghitung bit sebelum dikonversi ke Numpy Array
 def calculate_image_bits_pil(image):
-    # Get image size (width and height)
-    width, height = image.size
-    # Calculate the number of pixels
-    num_pixels = width * height
-    # Get the mode of the image to determine the number of channels
-    mode_to_bits = {
-        '1': 1,    # 1-bit pixels, black and white, stored with one pixel per byte
-        'L': 8,    # 8-bit pixels, black and white
-        'P': 8,    # 8-bit pixels, mapped to any other mode using a color palette
-        'RGB': 24, # 3x8-bit pixels, true color
-        'RGBA': 32,# 4x8-bit pixels, true color with transparency mask
-        'CMYK': 32,# 4x8-bit pixels, color separation
-        'YCbCr': 24,# 3x8-bit pixels, color video format
-        'LAB': 24, # 3x8-bit pixels, the L*a*b color space
-        'HSV': 24, # 3x8-bit pixels, Hue, Saturation, Value color space
-        'I': 32,   # 32-bit signed integer pixels
-        'F': 32    # 32-bit floating point pixels
-    }
-    bits_per_pixel = mode_to_bits.get(image.mode, 8) # Default to 8 bits if mode is not in the dictionary
-    # Calculate the total number of bits
-    total_bits_before_conversion = num_pixels * bits_per_pixel
-    return total_bits_before_conversion
+    if isinstance(image, Image.Image):
+        width, height = image.size
+        mode_to_bits = {
+            '1': 1,    # 1-bit pixels, black and white, stored with one pixel per byte
+            'L': 8,    # 8-bit pixels, black and white
+            'P': 8,    # 8-bit pixels, mapped to any other mode using a color palette
+            'RGB': 24, # 3x8-bit pixels, true color
+            'RGBA': 32,# 4x8-bit pixels, true color with transparency mask
+            'CMYK': 32,# 4x8-bit pixels, color separation
+            'YCbCr': 24,# 3x8-bit pixels, color video format
+            'LAB': 24, # 3x8-bit pixels, the L*a*b color space
+            'HSV': 24, # 3x8-bit pixels, Hue, Saturation, Value color space
+            'I': 32,   # 32-bit signed integer pixels
+            'F': 32    # 32-bit floating point pixels
+        }
+        bits_per_pixel = mode_to_bits.get(image.mode, 8) # Default to 8 bits if mode is not in the dictionary
+        total_pixels = width * height
+        total_bits = total_pixels * bits_per_pixel
+        return total_bits
+    else:
+        raise TypeError("Expected a PIL Image object, got {}".format(type(image)))
 
 # Fungsi untuk menghitung bit gambar
 def calculate_image_bits(image_array):
