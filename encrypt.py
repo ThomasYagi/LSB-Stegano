@@ -106,6 +106,9 @@ def encryptPage():
             mask = 0xFF << imbed  # Create a mask with the least significant `imbed` bits as 0
             coverzero = cover_res & mask
 
+            total_bits_after_imbed = calculate_image_bits(coverzero)
+            st.write(f"Jumlah bit dalam gambar {total_bits_after_imbed:,} bit")
+
             stego = coverzero | messageshift
 
             # Tampilkan gambar stego
