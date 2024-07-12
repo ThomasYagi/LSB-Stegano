@@ -20,17 +20,17 @@ def calculate_image_bits_pil(image):
     if isinstance(image, Image.Image):
         width, height = image.size
         mode_to_bits = {
-            '1': 1,    # 1-bit pixels, black and white, stored with one pixel per byte
-            'L': 8,    # 8-bit pixels, black and white
-            'P': 8,    # 8-bit pixels, mapped to any other mode using a color palette
-            'RGB': 24, # 3x8-bit pixels, true color
-            'RGBA': 32,# 4x8-bit pixels, true color with transparency mask
-            'CMYK': 32,# 4x8-bit pixels, color separation
-            'YCbCr': 24,# 3x8-bit pixels, color video format
-            'LAB': 24, # 3x8-bit pixels, the L*a*b color space
-            'HSV': 24, # 3x8-bit pixels, Hue, Saturation, Value color space
-            'I': 32,   # 32-bit signed integer pixels
-            'F': 32    # 32-bit floating point pixels
+            '1': 1,    # 1-bit piksel, hitam dan putih, disimpan dengan satu piksel per byte
+            'L': 8,    # 8-bit piksel, hitam dan putih
+            'P': 8,    # 8-bit piksel, dipetakan ke mode lain menggunakan palet warna
+            'RGB': 24, # 3x8-bit piksel, warna asli
+            'RGBA': 32,# 4x8-bit piksel, warna asli dengan masker transparansi
+            'CMYK': 32,# 4x8-bit piksel, pemisahan warna
+            'YCbCr': 24,# 3x8-bit piksel, format video warna
+            'LAB': 24, # 3x8-bit piksel, ruang warna Lab
+            'HSV': 24, # 3x8-bit piksel, ruang warna Hue, Saturation, Value
+            'I': 32,   # 32-bit piksel bilangan bulat bertanda
+            'F': 32    # 32-bit piksel titik mengambang
         }
         bits_per_pixel = mode_to_bits.get(image.mode, 8) # Default to 8 bits if mode is not in the dictionary
         total_pixels = width * height

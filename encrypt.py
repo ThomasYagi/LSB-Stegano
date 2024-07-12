@@ -19,26 +19,27 @@ def resize_image(cover, message):
 
 # Fungsi untuk menghitung bit sebelum dikonversi ke Numpy Array
 def calculate_image_bits_pil(image):
-    # Get image size (width and height)
+    # Dapatkan ukuran gambar (lebar & tinggi)
     width, height = image.size
-    # Calculate the number of pixels
+    # Kalkulasi jumlah pixel
     num_pixels = width * height
-    # Get the mode of the image to determine the number of channels
+    # Dapatkan mode gambar untuk menentukan jumlah channel.
     mode_to_bits = {
-        '1': 1,    # 1-bit pixels, black and white, stored with one pixel per byte
-        'L': 8,    # 8-bit pixels, black and white
-        'P': 8,    # 8-bit pixels, mapped to any other mode using a color palette
-        'RGB': 24, # 3x8-bit pixels, true color
-        'RGBA': 32,# 4x8-bit pixels, true color with transparency mask
-        'CMYK': 32,# 4x8-bit pixels, color separation
-        'YCbCr': 24,# 3x8-bit pixels, color video format
-        'LAB': 24, # 3x8-bit pixels, the L*a*b color space
-        'HSV': 24, # 3x8-bit pixels, Hue, Saturation, Value color space
-        'I': 32,   # 32-bit signed integer pixels
-        'F': 32    # 32-bit floating point pixels
+        '1': 1,    # 1-bit piksel, hitam dan putih, disimpan dengan satu piksel per byte
+        'L': 8,    # 8-bit piksel, hitam dan putih
+        'P': 8,    # 8-bit piksel, dipetakan ke mode lain menggunakan palet warna
+        'RGB': 24, # 3x8-bit piksel, warna asli
+        'RGBA': 32,# 4x8-bit piksel, warna asli dengan masker transparansi
+        'CMYK': 32,# 4x8-bit piksel, pemisahan warna
+        'YCbCr': 24,# 3x8-bit piksel, format video warna
+        'LAB': 24, # 3x8-bit piksel, ruang warna Lab
+        'HSV': 24, # 3x8-bit piksel, ruang warna Hue, Saturation, Value
+        'I': 32,   # 32-bit piksel bilangan bulat bertanda
+        'F': 32    # 32-bit piksel titik mengambang
     }
-    bits_per_pixel = mode_to_bits.get(image.mode, 8) # Default to 8 bits if mode is not in the dictionary
-    # Calculate the total number of bits
+    # Default ke 8 bit jika mode tidak ada dalam library.
+    bits_per_pixel = mode_to_bits.get(image.mode, 8) 
+    # Hitung jumlah total bit.
     total_bits = num_pixels * bits_per_pixel
     return total_bits
 
@@ -69,10 +70,6 @@ def encryptPage():
                 # Mengonversi ke RGB jika gambar dalam format CMYK
                 message = message.convert('RGB')
 
-            # Reduce the contrast of the message image
-            # enhancer = ImageEnhance.Contrast(message)
-            # message = enhancer.enhance(0.1)
-
             # Menyamakan ukuran gambar cover dengan gambar pesan
             cover_res = resize_image(cover, message)
 
@@ -99,24 +96,29 @@ def encryptPage():
             # Harus digeser dari LSB (bit paling rendah) ke MSB (bit paling tinggi)
             showmess = messageshift << (8-imbed)
 
-            # Display the showmess image
+            # Tampilkan gambar "showmess".
             st.image(showmess, caption='Ini adalah gambar yang akan dienkripsi')
 
-            # Now, clear the imbed least significant bits of the cover image
-            mask = 0xFF << imbed  # Create a mask with the least significant `imbed` bits as 0
+            # Sekarang, hapus bit signifikan terkecil dari gambar penutup.
+            mask = 0xFF << imbed  
+            
+            # Buat masker dengan bit signifikan terkecil `imbed` sebagai 0.
             coverzero = cover_res & mask
 
+            # Kalkulasi jumlah bit gambar setelah di imbed.
             total_bits_after_imbed = calculate_image_bits(coverzero)
             st.write(f"Jumlah bit dalam gambar enkripsi {total_bits_after_imbed:,} bit")
 
+            # Gabungkan coverzero dan messageshift.
             stego = coverzero | messageshift
 
-            # Tampilkan gambar stego
+            # Tampilkan gambar stego.
             st.image(stego, caption='Ini adalah gambar hasil enkripsi', channels='GRAY')
 
             # Ubah kembali array stego menjadi gambar
             stego_img = Image.fromarray(stego.astype(np.uint8))
 
+            # Unduh gambar stego ke dalam format "PNG".
             stego_img.save('stego.png')
 
             # Tambahkan link unduhan
