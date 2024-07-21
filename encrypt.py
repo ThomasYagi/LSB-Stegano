@@ -123,7 +123,7 @@ def encryptPage():
             stego_img.info['dpi'] = dpi_original
 
             # Unduh gambar stego ke dalam format "PNG".
-            stego_img.save('stego.png', dpi=(dpi_original, dpi_original))
+            stego_img.save('stego.png', dpi=(300,300))
 
             # Tambahkan link unduhan
             st.markdown(get_image_download_link(stego_img, 'stego.png', 'Download Gambar Enkripsi'), unsafe_allow_html=True)
