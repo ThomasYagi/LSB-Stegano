@@ -70,8 +70,7 @@ def encryptPage():
                 # Mengonversi ke RGB jika gambar dalam format CMYK
                 message = message.convert('RGB')
 
-            dpi_message = message.info.get('dpi', (72, 72))
-            dpi_cover = cover.info.get('dpi', (72, 72))
+            dpi_original = (150, 150)
             
             # Menyamakan ukuran gambar cover dengan gambar pesan
             cover_res = resize_image(cover, message)
@@ -121,10 +120,10 @@ def encryptPage():
             # Ubah kembali array stego menjadi gambar
             stego_img = Image.fromarray(stego.astype(np.uint8))
 
-            stego_img.info['dpi'] = dpi_message
+            stego_img.info['dpi'] = dpi_original
 
             # Unduh gambar stego ke dalam format "PNG".
-            stego_img.save('stego.png')
+            stego_img.save('stego.png', dpi=dpi_original)
 
             # Tambahkan link unduhan
             st.markdown(get_image_download_link(stego_img, 'stego.png', 'Download Gambar Enkripsi'), unsafe_allow_html=True)
