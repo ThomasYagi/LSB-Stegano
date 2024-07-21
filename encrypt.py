@@ -118,6 +118,8 @@ def encryptPage():
             # Ubah kembali array stego menjadi gambar
             stego_img = Image.fromarray(stego.astype(np.uint8))
 
+            stego_img.info = message.info
+
             # Unduh gambar stego ke dalam format "PNG".
             stego_img.save('stego.png')
 
