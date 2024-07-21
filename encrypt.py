@@ -70,7 +70,10 @@ def encryptPage():
                 # Mengonversi ke RGB jika gambar dalam format CMYK
                 message = message.convert('RGB')
 
-            dpi_original = (150, 150)
+            try:
+                dpi_original = message.info.get('dpi', (150, 150))  # Fallback to 150 DPI if not available
+            except KeyError:
+                dpi_original = (150, 150)
             
             # Menyamakan ukuran gambar cover dengan gambar pesan
             cover_res = resize_image(cover, message)
