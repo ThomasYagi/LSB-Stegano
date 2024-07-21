@@ -10,7 +10,7 @@ def get_image_download_link(img, filename, text):
     buffered = BytesIO()
     if img.mode in ('RGBA', 'P'):  # Jika gambar memiliki alpha channel
         img = img.convert('RGB')  # Konversi ke 'RGB'
-    img.save(buffered, format='JPEG')  # Gunakan 'JPEG' sebagai format penyimpanan
+    img.save(buffered, format='JPEG', dpi=(300, 300))  # Gunakan 'JPEG' sebagai format penyimpanan
     img_str = base64.b64encode(buffered.getvalue()).decode()
     href = f'<a href="data:image/jpeg;base64,{img_str}" download="{filename}">{text}</a>'  # Use 'image/jpeg' as the MIME type
     return href
