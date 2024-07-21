@@ -58,22 +58,19 @@ def encryptPage():
     cover_file = st.file_uploader('', type=['jpg'], key="cover")
     if cover_file is not None:
         cover = Image.open(cover_file)
+        dpi_original = cover.info.get('dpi', (72, 72))
 
         # Unggah gambar pesan
         st.markdown("<h4 style='text-align: left;'>Unggah Sampul Buku</h4>", unsafe_allow_html=True)
         message_file = st.file_uploader('', type=['png','jpg'], key="message")
         if message_file is not None:
             message = Image.open(message_file)
+            dpi_original = message.info.get('dpi', (72, 72))
 
             # Mengecek apakah gambar dalam format CMYK atau RGB
             if message.mode == 'CMYK':
                 # Mengonversi ke RGB jika gambar dalam format CMYK
                 message = message.convert('RGB')
-
-            try:
-                dpi_original = message.info.get('dpi', (150, 150))  # Fallback to 150 DPI if not available
-            except KeyError:
-                dpi_original = (150, 150)
             
             # Menyamakan ukuran gambar cover dengan gambar pesan
             cover_res = resize_image(cover, message)
