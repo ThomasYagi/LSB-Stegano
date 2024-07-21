@@ -58,14 +58,12 @@ def encryptPage():
     cover_file = st.file_uploader('', type=['jpg'], key="cover")
     if cover_file is not None:
         cover = Image.open(cover_file)
-        dpi_original = cover.info.get('dpi', (72, 72))
 
         # Unggah gambar pesan
         st.markdown("<h4 style='text-align: left;'>Unggah Sampul Buku</h4>", unsafe_allow_html=True)
         message_file = st.file_uploader('', type=['png','jpg'], key="message")
         if message_file is not None:
             message = Image.open(message_file)
-            dpi_original = message.info.get('dpi', (72, 72))
 
             # Mengecek apakah gambar dalam format CMYK atau RGB
             if message.mode == 'CMYK':
@@ -120,10 +118,8 @@ def encryptPage():
             # Ubah kembali array stego menjadi gambar
             stego_img = Image.fromarray(stego.astype(np.uint8))
 
-            stego_img.info['dpi'] = dpi_original
-
             # Unduh gambar stego ke dalam format "PNG".
-            stego_img.save('stego.png', dpi=(300,300))
+            stego_img.save('stego.png')
 
             # Tambahkan link unduhan
             st.markdown(get_image_download_link(stego_img, 'stego.png', 'Download Gambar Enkripsi'), unsafe_allow_html=True)
