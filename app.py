@@ -26,6 +26,7 @@ def login_user(username, password):
 
 # Check URL parameters to update session state
 query_params = st.experimental_get_query_params()
+st.write("Query Params:", query_params)
 if "logged_in" in query_params and query_params["logged_in"][0] == "true":
     st.session_state["logged_in"] = True
     st.session_state["username"] = query_params["username"][0]
