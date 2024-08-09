@@ -153,15 +153,15 @@ def encryptPage():
             stego_img = Image.fromarray(stego.astype(np.uint8))
 
             # Input password
-            password = st.text_input("Enter a password to encrypt the image", type="password")
+            password = st.text_input("Masukkan password untuk enkripsi gambar", type="password")
 
             if st.button("Encrypt"):
                 if password:
                     # Encrypt the image with the password
                     encrypted_data_with_salt = encrypt_image_with_password(stego_img, password)
-                    st.success("Image encrypted successfully!")
+                    st.success("Gambar berhasil dienkripsi!")
 
-                    download_link = get_image_download_link(encrypted_data_with_salt, "encrypted_image.png", "Download Encrypted Image")
+                    download_link = get_image_download_link(encrypted_data_with_salt, "encrypted_image.png", "Unduh gambar enkripsi")
                     st.markdown(download_link, unsafe_allow_html=True)
                 else:
-                    st.error("Please enter a password to encrypt the image")
+                    st.error("Masukkan password untuk enkripsi gambar!")
