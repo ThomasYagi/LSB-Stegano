@@ -164,4 +164,4 @@ def encryptPage():
                     download_link = get_image_download_link(encrypted_data_with_salt, "encrypted_image.png", "Download Encrypted Image")
                     st.markdown(download_link, unsafe_allow_html=True)
                 else:
-                    st.error("Please enter a password to encrypt the image.")
+                    st.error("Please enter a password to encrypt the image")
