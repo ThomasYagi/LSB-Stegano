@@ -4,6 +4,10 @@ from PIL import ImageEnhance
 import numpy as np
 import base64
 from io import BytesIO
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.backends import default_backend
+from cryptography.fernet import Fernet
 
 # Fungsi untuk mendownload gambar stego ke dalam bentuk 'JPG'
 def get_image_download_link(img, filename, text):
@@ -14,6 +18,26 @@ def get_image_download_link(img, filename, text):
     img_str = base64.b64encode(buffered.getvalue()).decode()
     href = f'<a href="data:image/jpeg;base64,{img_str}" download="{filename}">{text}</a>'  # Use 'image/jpeg' as the MIME type
     return href
+
+def decrypt_image_with_password(encrypted_data_with_salt, password):
+    # Extract the salt from the beginning of the encrypted data
+    salt = encrypted_data_with_salt[:16]
+    encrypted_bytes = encrypted_data_with_salt[16:]
+
+    # Derive the key from the password and salt
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=100000,
+        backend=default_backend()
+    )
+    key = base64.urlsafe_b64encode(kdf.derive(password.encode('utf-8')))
+    fernet = Fernet(key)
+
+    # Decrypt image bytes
+    decrypted_bytes = fernet.decrypt(encrypted_bytes)
+    return Image.open(BytesIO(decrypted_bytes))
 
 # Fungsi untuk menghitung bit sebelum dikonversi ke Numpy Array
 def calculate_image_bits_pil(image):
