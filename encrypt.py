@@ -4,11 +4,6 @@ from PIL import ImageEnhance
 import numpy as np 
 import base64
 from io import BytesIO
-from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.backends import default_backend
-import os
 
 # Fungsi untuk mendownload gambar stego ke dalam bentuk 'PNG'
 def get_image_download_link(img, filename, text):
@@ -21,35 +16,6 @@ def get_image_download_link(img, filename, text):
 # Fungsi untuk menyesuaikan ukuran cover dengan ukuran message
 def resize_image(cover, message):
     return cover.resize(message.size)
-
-# Fungsi untuk mengenkripsi data gambar dengan password
-def encrypt_image_with_password(image, password):
-    # Convert image to bytes
-    buffered = BytesIO()
-    image.save(buffered, format="PNG")
-    img_bytes = buffered.getvalue()
-
-    # Generate a salt
-    salt = os.urandom(16)
-
-    # Derive a key from the password
-    kdf = PBKDF2HMAC(
-        algorithm=hashes.SHA256(),
-        length=32,
-        salt=salt,
-        iterations=100000,
-        backend=default_backend()
-    )
-    key = base64.urlsafe_b64encode(kdf.derive(password.encode('utf-8')))
-    fernet = Fernet(key)
-    
-    # Generate key from password
-    key = base64.urlsafe_b64encode(password.encode('utf-8'))
-    fernet = Fernet(key)
-
-    # Encrypt image bytes
-    encrypted_bytes = fernet.encrypt(img_bytes)
-    return encrypted_bytes
 
 # Fungsi untuk menghitung bit sebelum dikonversi ke Numpy Array
 def calculate_image_bits_pil(image):
@@ -152,17 +118,6 @@ def encryptPage():
             # Ubah kembali array stego menjadi gambar
             stego_img = Image.fromarray(stego.astype(np.uint8))
 
-            # Input password
-            password = st.text_input("Masukkan password untuk enkripsi gambar", type="password")
-
-            if st.button("Encrypt"):
-                if password:
-                    # Encrypt the image with the password
-                    encrypted_data_with_salt = encrypt_image_with_password(stego_img, password)
-                    st.success("Gambar berhasil dienkripsi!")
-
-                    download_link = get_image_download_link(encrypted_data_with_salt, "encrypted_image.png", "Unduh gambar enkripsi")
-                    st.markdown(download_link, unsafe_allow_html=True)
-                    pass
-                else:
-                    st.error("Masukkan password untuk enkripsi gambar!")
+            # Create a download link for the stego image
+            download_link = get_image_download_link(stego_img, "stego_image.png", "Unduh gambar enkripsi")
+            st.markdown(download_link, unsafe_allow_html=True)
