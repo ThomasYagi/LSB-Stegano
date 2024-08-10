@@ -1,6 +1,7 @@
 import streamlit as st 
 from PIL import Image
 import numpy as np
+import time
 from decrypt import decryptPage
 from encrypt import encryptPage
 from database import add_user, get_user
@@ -20,6 +21,8 @@ def login():
         if user and user[1] == password:
             st.session_state.logged_in = True
             st.success("Login successful")
+            time.sleep(1)
+            st.experimental_rerun()
         else:
             st.error("Invalid username or password")
 
