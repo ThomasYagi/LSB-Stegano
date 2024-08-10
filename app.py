@@ -13,29 +13,32 @@ if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 
 def login():
-    st.title("Login")
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-    if st.button("Login"):
-        user = get_user(username)
-        if user and user[1] == password:
-            st.session_state.logged_in = True
-            st.success("Login successful")
-            time.sleep(1)
-            st.experimental_rerun()
+    st.title("Masuk")
+    username = st.text_input("Nama Pengguna")
+    password = st.text_input("Kata Sandi", type="password")
+    if st.button("Masuk"):
+        if not username or not password:
+            st.error("Nama pengguna dan kata sandi tidak boleh kosong!")
         else:
-            st.error("Invalid username or password")
+            user = get_user(username)
+            if user and user[1] == password:
+                st.session_state.logged_in = True
+                st.success("Pengguna berhasil masuk, tunggu sebentar...")
+                time.sleep(1)
+                st.experimental_rerun()
+            else:
+                st.error("Nama pengguna atau kata sandi salah")
 
 def register():
-    st.title("Register")
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-    if st.button("Register"):
+    st.title("Daftar")
+    username = st.text_input("Nama Pengguna")
+    password = st.text_input("Kata Sandi", type="password")
+    if st.button("Daftar"):
         if get_user(username):
-            st.error("Username already exists")
+            st.error("Nama pengguna telah digunakan!")
         else:
             add_user(username, password)
-            st.success("Registration successful")
+            st.success("Pendaftaran pengguna berhasil!")
 
 def main_app():
     st.title('Tugas Akhir')
@@ -49,17 +52,27 @@ def main_app():
     }
 
     st.sidebar.title("Menu")
-    selection = st.sidebar.radio("Pilih menu", list(PAGES.keys()))
+    if 'current_page' not in st.session_state:
+        st.session_state.current_page = list(PAGES.keys())[0]
+    selection = st.sidebar.radio("Pilih menu", list(PAGES.keys()), index=list(PAGES.keys()).index(st.session_state.current_page))
+
+    # Update current_page state
+    st.session_state.current_page = selection
 
     page = PAGES[selection]
     page()
 
+    # Add a logout button in the sidebar
+    if st.sidebar.button("Keluar"):
+        st.session_state.logged_in = False
+        st.experimental_rerun()
+
 if st.session_state.logged_in:
     main_app()
 else:
-    st.sidebar.title("Authentication")
-    auth_action = st.sidebar.radio("Login/ Register", ["Login", "Register"])
-    if auth_action == "Login":
+    st.sidebar.title("Autentikasi")
+    auth_action = st.sidebar.radio("Pengguna perlu masuk ke dalam sistem terlebih dahulu", ["Masuk", "Daftar"])
+    if auth_action == "Masuk":
         login()
     else:
         register()
