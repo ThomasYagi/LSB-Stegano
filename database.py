@@ -1,11 +1,16 @@
 import sqlite3
 
-def init_db():
+def create_connection():
     conn = sqlite3.connect('users.db')
-    c = conn.cursor()
-    c.execute('''
+    return conn
+
+def create_table():
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
-            username TEXT PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL
         )
     ''')
@@ -13,21 +18,19 @@ def init_db():
     conn.close()
 
 def add_user(username, password):
-    conn = sqlite3.connect('users.db')
-    c = conn.cursor()
-    try:
-        c.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, password))
-        conn.commit()
-        return True
-    except sqlite3.IntegrityError:
-        return False
-    finally:
-        conn.close()
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, password))
+    conn.commit()
+    conn.close()
 
 def get_user(username):
-    conn = sqlite3.connect('users.db')
-    c = conn.cursor()
-    c.execute('SELECT password FROM users WHERE username = ?', (username,))
-    user = c.fetchone()
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
+    user = cursor.fetchone()
     conn.close()
     return user
+
+# Initialize the database
+create_table()
